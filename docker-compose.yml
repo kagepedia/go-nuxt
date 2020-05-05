@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  client:
+    build: ./client
+    environment:
+      - NUXT_HOST=0.0.0.0
+    ports:
+      - 8080:3000
+    volumes:
+      - ./client:/frontend
+    command: yarn dev
+
+  server:
+    build: ./server
+    ports:
+      - 8888:8888
+    volumes:
+      - ./server:/backend
+    depends_on:
+      - db
+
+  db:
+    build: ./db
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db/sql:/docker-entrypoint-initdb.d
+      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+      # - ./db/data:/var/lib/mysql
+    environment:
+      # MYSQL_DATABASE: sample
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
