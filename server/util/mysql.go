@@ -9,7 +9,7 @@ import (
 )
 
 func Sqlhandler() *sql.DB {
-	db, err := sql.Open("mysql", "root@tcp(127.0.0.1:3306)/sample_db")
+	db, err := sql.Open("mysql", "root:password@tcp(go-nuxt-docker_db_1)/sample_db")
 	if err != nil {
 		log.Fatal(err)
 	}

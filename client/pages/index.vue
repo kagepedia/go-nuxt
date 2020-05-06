@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
 
@@ -70,6 +71,14 @@ export default {
   components: {
     Logo,
     VuetifyLogo
+  },
+  mounted() {
+    axios.get('/api').then((res) => console.log(res.data))
+    /*
+    axios
+      .get('https://api.coindesk.com/v1/bpi/currentprice.json')
+      .then((res) => console.log(res.data))
+    */
   }
 }
 </script>

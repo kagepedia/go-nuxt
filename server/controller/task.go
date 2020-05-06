@@ -42,7 +42,7 @@ func HandlerTasks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	db := util.Sqlhandler()
-	rows, err := db.Query("SELECT id, task FROM t_task WHERE id = ?", 1)
+	rows, err := db.Query("SELECT id, task FROM t_task WHERE id = ?", 3)
 	if err != nil {
 		log.Fatal(err)
 	}
