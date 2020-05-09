@@ -77,6 +77,6 @@ export default {
     proxy: true
   },
   proxy: {
-    '/api': 'http://localhost:8888'
+    '/api/': { target: 'http://server:8888', pathRewrite: { '^/api/': '/' } }
   }
 }
