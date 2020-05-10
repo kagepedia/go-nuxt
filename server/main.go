@@ -9,7 +9,6 @@ import (
 
 func main() {
 	util.Sqlhandler()
-	http.HandleFunc("/", controller.HandlerIndex)
 	http.HandleFunc("/tasks", controller.HandlerTasks)
 	http.ListenAndServe(":8888", nil)
 }

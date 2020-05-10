@@ -1,3 +1,7 @@
+/*
+** Task CRUD
+ */
+
 package controller
 
 import (
@@ -10,11 +14,6 @@ import (
 	"github.com/kagepedia/go-api/util"
 )
 
-type Ping struct {
-	Status int
-	Rssult string
-}
-
 type Task struct {
 	Id       int64
 	Task     string
@@ -24,32 +23,24 @@ type Task struct {
 
 var tasks []Task
 
-func HandlerIndex(w http.ResponseWriter, r *http.Request) {
-	ping := Ping{http.StatusOK, "bad"}
-	res, err := json.Marshal(ping)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(res)
+// 構造体に関して勉強（作成）Create まだ
+func HandlerTasksCreate(w http.ResponseWriter, r *http.Request) {
 }
 
-// 構造体に関して勉強
+// 構造体に関して勉強（表示）Read OK
 func HandlerTasks(w http.ResponseWriter, r *http.Request) {
 	// json定義
 	w.Header().Set("Content-Type", "application/json")
 
 	db := util.Sqlhandler()
-	rows, err := db.Query("SELECT id, task FROM t_task WHERE id = ?", 3)
+	rows, err := db.Query("SELECT * FROM t_task WHERE id = ?", 3)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var task Task
-		err := rows.Scan(&task.Id, &task.Task)
+		err := rows.Scan(&task.Id, &task.Task, &task.CreateAt, &task.UpdateAt)
 
 		res, err := json.Marshal(task)
 		if err != nil {
@@ -68,6 +59,36 @@ func HandlerTasks(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	defer db.Close()
+}
+
+// 構造体に関して勉強（作成）Update　まだ
+func HandlerTasksUpdate(w http.ResponseWriter, r *http.Request) {
+}
+
+// 構造体に関して勉強（作成）Delete まだ
+func HandlerTasksDelete(w http.ResponseWriter, r *http.Request) {
+
+	db := util.Sqlhandler()
+	id := r.URL.Query().Get("id")
+	deleteData, err := db.Prepare("DELETE FROM t_task WHERE id = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer deleteData.Close()
+
+	result, err := deleteData.Exec(id)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	rowsAffect, err := result.RowsAffected()
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Println(rowsAffect)
 
 	defer db.Close()
 }

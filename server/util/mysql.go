@@ -8,6 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+// DB Start
 func Sqlhandler() *sql.DB {
 	db, err := sql.Open("mysql", "root:password@tcp(go-nuxt-docker_db_1)/sample_db")
 	if err != nil {
@@ -17,3 +18,11 @@ func Sqlhandler() *sql.DB {
 
 	return db
 }
+
+// SELECT
+
+// INSERT
+
+// UPDATE
+
+// DELETE
