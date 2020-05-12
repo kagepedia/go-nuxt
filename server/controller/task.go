@@ -21,8 +21,6 @@ type Task struct {
 	UpdateAt time.Time
 }
 
-var tasks []Task
-
 // 構造体に関して勉強（作成）Create まだ
 func HandlerTasksCreate(w http.ResponseWriter, r *http.Request) {
 }
@@ -33,32 +31,31 @@ func HandlerTasks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	db := util.Sqlhandler()
-	rows, err := db.Query("SELECT * FROM t_task WHERE id = ?", 3)
+	rows, err := db.Query("SELECT * FROM t_task")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
+
+	var tasks []Task
 	for rows.Next() {
 		var task Task
 		err := rows.Scan(&task.Id, &task.Task, &task.CreateAt, &task.UpdateAt)
-
-		res, err := json.Marshal(task)
-		if err != nil {
-			log.Fatal(err)
-		}
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		fmt.Fprint(w, string(res))
+		tasks = append(tasks, task)
 
 	}
 	err = rows.Err()
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	json.NewEncoder(w).Encode(tasks)
 
 	defer db.Close()
 }

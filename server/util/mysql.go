@@ -10,7 +10,7 @@ import (
 
 // DB Start
 func Sqlhandler() *sql.DB {
-	db, err := sql.Open("mysql", "root:password@tcp(go-nuxt-docker_db_1)/sample_db")
+	db, err := sql.Open("mysql", "root:password@tcp(go-nuxt-docker_db_1)/sample_db?parseTime=true")
 	if err != nil {
 		log.Fatal(err)
 	}

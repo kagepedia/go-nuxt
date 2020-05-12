@@ -1,4 +1,4 @@
-import colors from 'vuetify/es5/util/colors'
+// import colors from 'vuetify/es5/util/colors'
 
 export default {
   mode: 'spa',
@@ -47,6 +47,7 @@ export default {
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module
    */
+  /*
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
@@ -64,6 +65,7 @@ export default {
       }
     }
   },
+  */
   /*
    ** Build configuration
    */
