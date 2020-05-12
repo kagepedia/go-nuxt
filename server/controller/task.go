@@ -21,6 +21,26 @@ type Task struct {
 	UpdateAt time.Time
 }
 
+type Time struct {
+	UpdateAt time.Time
+}
+
+// サンプル
+func HandlerIndex(w http.ResponseWriter, r *http.Request) {
+	nowTime := time.Now()
+	const format = "2006/01/02 15:04:05"
+	nowTime.Format(format)
+	time := Time{nowTime}
+	res, err := json.Marshal(time)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(res)
+}
+
 // 構造体に関して勉強（作成）Create まだ
 func HandlerTasksCreate(w http.ResponseWriter, r *http.Request) {
 }
