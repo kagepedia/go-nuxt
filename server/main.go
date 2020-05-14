@@ -7,10 +7,9 @@ import (
 )
 
 func main() {
-	// util.Sqlhandler()
-	http.HandleFunc("/", controller.HandlerIndex)
-	http.HandleFunc("/tasks", controller.HandlerTasks)
-	http.HandleFunc("/update", controller.HandlerTasksUpdate)
-	http.HandleFunc("/taskdelete", controller.HandlerTasksDelete)
+	http.HandleFunc("/", controller.Create)
+	http.HandleFunc("/tasks", controller.Read)
+	http.HandleFunc("/update", controller.Update)
+	http.HandleFunc("/taskdelete", controller.Delete)
 	http.ListenAndServe(":8888", nil)
 }

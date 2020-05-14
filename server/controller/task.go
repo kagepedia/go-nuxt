@@ -21,8 +21,8 @@ type Task struct {
 	UpdateAt time.Time
 }
 
-// サンプル
-func HandlerIndex(w http.ResponseWriter, r *http.Request) {
+// 構造体に関して勉強（作成）Create まだ
+func Create(w http.ResponseWriter, r *http.Request) {
 	nowTime := time.Now()
 	const format = "2006/01/02 15:04:05"
 	nowTime.Format(format)
@@ -34,16 +34,15 @@ func HandlerIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer ins.Close()
-	ins.Exec("task-2020", nowTime, nowTime)
-
-}
-
-// 構造体に関して勉強（作成）Create まだ
-func HandlerTasksCreate(w http.ResponseWriter, r *http.Request) {
+	_, err = ins.Exec("task-2020", nowTime, nowTime)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // 構造体に関して勉強（表示）Read OK
-func HandlerTasks(w http.ResponseWriter, r *http.Request) {
+func Read(w http.ResponseWriter, r *http.Request) {
 	// json定義
 	w.Header().Set("Content-Type", "application/json")
 
@@ -78,7 +77,8 @@ func HandlerTasks(w http.ResponseWriter, r *http.Request) {
 }
 
 // 構造体に関して勉強（作成）Update　まだ
-func HandlerTasksUpdate(w http.ResponseWriter, r *http.Request) {
+func Update(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("UPDATE")
 	//update
 	nowTime := time.Now()
 	db := util.Sqlhandler()
@@ -93,7 +93,8 @@ func HandlerTasksUpdate(w http.ResponseWriter, r *http.Request) {
 }
 
 // 構造体に関して勉強（作成）Delete まだ
-func HandlerTasksDelete(w http.ResponseWriter, r *http.Request) {
+func Delete(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("DELETE")
 
 	db := util.Sqlhandler()
 	id := r.URL.Query().Get("id")
