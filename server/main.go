@@ -7,9 +7,10 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/", controller.Create)
-	http.HandleFunc("/tasks", controller.Read)
+	http.HandleFunc("/cretate", controller.Create)
+	http.HandleFunc("/read", controller.Read)
+	http.HandleFunc("/find", controller.Find)
 	http.HandleFunc("/update", controller.Update)
-	http.HandleFunc("/taskdelete", controller.Delete)
+	http.HandleFunc("/delete", controller.Delete)
 	http.ListenAndServe(":8888", nil)
 }

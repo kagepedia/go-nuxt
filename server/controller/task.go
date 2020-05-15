@@ -23,6 +23,8 @@ type Task struct {
 
 // 構造体に関して勉強（作成）Create まだ
 func Create(w http.ResponseWriter, r *http.Request) {
+
+	task := r.FormValue("task")
 	nowTime := time.Now()
 	const format = "2006/01/02 15:04:05"
 	nowTime.Format(format)
@@ -34,11 +36,13 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer ins.Close()
-	_, err = ins.Exec("task-2020", nowTime, nowTime)
+	_, err = ins.Exec(&task, nowTime, nowTime)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(task)
 }
 
 // 構造体に関して勉強（表示）Read OK
@@ -76,12 +80,19 @@ func Read(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 }
 
+// 構造体に関して勉強（作成）Find　まだ
+func Find(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	id := r.FormValue("id")
+	json.NewEncoder(w).Encode(id)
+}
+
 // 構造体に関して勉強（作成）Update　まだ
 func Update(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("UPDATE")
 	//update
 	nowTime := time.Now()
 	db := util.Sqlhandler()
+	id := r.FormValue("id")
 	defer db.Close()
 	upd, err := db.Prepare("UPDATE t_task SET task = ?, updated_at = ? WHERE id = ? ")
 	if err != nil {
@@ -89,15 +100,16 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer upd.Close()
-	upd.Exec("yamatonadeshiko", nowTime, 33)
+	upd.Exec("yamatonadeshiko", nowTime, id)
 }
 
 // 構造体に関して勉強（作成）Delete まだ
 func Delete(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("DELETE")
+
+	w.Header().Set("Content-Type", "application/json")
 
 	db := util.Sqlhandler()
-	id := r.URL.Query().Get("id")
+	id := r.FormValue("id")
 	deleteData, err := db.Prepare("DELETE FROM t_task WHERE id = ?")
 	if err != nil {
 		log.Fatal(err)
@@ -117,4 +129,6 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(rowsAffect)
 
 	defer db.Close()
+
+	json.NewEncoder(w).Encode(rowsAffect)
 }

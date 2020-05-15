@@ -3,10 +3,10 @@
     <div>
       <nuxt-link to="/Create">Create</nuxt-link>
       <h2>新しいtaskの追加</h2>
-      <form class="add-form" @submit.prevent="doAdd">
-        タスク <input ref="comment" type="text" />
-        <button type="submit">追加</button>
-      </form>
+      <div>
+        タスク <input v-model="newTask" type="text" />
+        <button @click="taskAdd()">追加</button>
+      </div>
       <h2>task一覧</h2>
       <table class="test">
         <tr>
@@ -22,7 +22,7 @@
           <td>{{ data.Task }}</td>
           <td>{{ data.CreateAt }}</td>
           <td>{{ data.UpdateAt }}</td>
-          <td><button @click="edit(data.Id)">編集</button></td>
+          <td><button @click="find(data.Id)">編集</button></td>
           <td><button @click="del(data.Id)">削除</button></td>
         </tr>
       </table>
@@ -42,22 +42,33 @@ import axios from 'axios'
 export default {
   data() {
     return {
+      newTask: '',
       datas: []
     }
   },
   mounted() {
-    axios.get('/api/tasks').then((res) => (this.datas = res.data))
+    axios.get('/api/read').then((res) => (this.datas = res.data))
   },
   methods: {
     taskAdd() {
-      console.log('task add')
+      const params = new URLSearchParams()
+      params.append('task', this.newTask)
+      axios.post('/api/cretate', params).then((this.newTask = ''))
+    },
+    find(id) {
+      const params = new URLSearchParams()
+      params.append('id', id)
+      axios.post('/api/find', params).then((res) => console.log(res))
     },
     edit(id) {
-      console.log(id)
+      const params = new URLSearchParams()
+      params.append('id', id)
+      axios.post('/api/update', params).then((res) => console.log(res))
     },
     del(id) {
-      console.log(id)
-      axios.post('/api/taskdelete', { id })
+      const params = new URLSearchParams()
+      params.append('id', id)
+      axios.post('/api/delete', params).then((res) => console.log(res))
     }
   }
 }
