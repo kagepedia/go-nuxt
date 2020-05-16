@@ -1,4 +1,7 @@
 {
     "go.formatTool": "gofmt",
-    "go.toolsEnvVars": {"GO111MODULE": "on"}
+    "go.toolsEnvVars": {
+        "GO111MODULE": "on"
+    },
+    "editor.formatOnSave": true
 }

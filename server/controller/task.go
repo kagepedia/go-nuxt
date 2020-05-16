@@ -7,11 +7,13 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/kagepedia/go-api/models"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
-	"github.com/kagepedia/go-api/util"
+	"github.com/kagepedia/go-api/utils"
 )
 
 type Task struct {
@@ -38,11 +40,12 @@ func Sample(w http.ResponseWriter, r *http.Request) {
 // 構造体に関して勉強（作成）Create まだ
 func Create(w http.ResponseWriter, r *http.Request) {
 
-	task := r.FormValue("task")
+	task := models.Task{}
+	task.Task = r.FormValue("task")
 	nowTime := time.Now()
 	const format = "2006/01/02 15:04:05"
 	nowTime.Format(format)
-	db := util.Sqlhandler()
+	db := utils.Sqlhandler()
 	defer db.Close()
 	ins, err := db.Prepare("INSERT INTO t_task (task,created_at,updated_at) VALUES (?,?,?)")
 	if err != nil {
@@ -50,7 +53,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer ins.Close()
-	_, err = ins.Exec(&task, nowTime, nowTime)
+	_, err = ins.Exec(&task.Task, nowTime, nowTime)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -64,7 +67,7 @@ func Read(w http.ResponseWriter, r *http.Request) {
 	// json定義
 	w.Header().Set("Content-Type", "application/json")
 
-	db := util.Sqlhandler()
+	db := utils.Sqlhandler()
 	rows, err := db.Query("SELECT * FROM t_task")
 	if err != nil {
 		log.Fatal(err)
@@ -97,9 +100,10 @@ func Read(w http.ResponseWriter, r *http.Request) {
 // 構造体に関して勉強（作成）Find　まだ
 func Find(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	db := util.Sqlhandler()
+	db := utils.Sqlhandler()
 	id := r.FormValue("id")
-	var task Task
+	task := models.Task{}
+	// var task Task
 	err := db.QueryRow("SELECT * FROM t_task WHERE id = ?", id).Scan(&task.Id, &task.Task, &task.CreateAt, &task.UpdateAt)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -112,9 +116,10 @@ func Find(w http.ResponseWriter, r *http.Request) {
 func Update(w http.ResponseWriter, r *http.Request) {
 	//update
 	nowTime := time.Now()
-	db := util.Sqlhandler()
-	id := r.FormValue("id")
-	task := r.FormValue("task")
+	db := utils.Sqlhandler()
+	task := models.Task{}
+	task.Id, _ = strconv.ParseInt(r.FormValue("id"), 10, 64)
+	task.Task = r.FormValue("task")
 	defer db.Close()
 	upd, err := db.Prepare("UPDATE t_task SET task = ?, updated_at = ? WHERE id = ? ")
 	if err != nil {
@@ -122,7 +127,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer upd.Close()
-	upd.Exec(task, nowTime, id)
+	upd.Exec(&task.Task, nowTime, &task.Id)
 }
 
 // 構造体に関して勉強（作成）Delete まだ
@@ -130,8 +135,9 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	db := util.Sqlhandler()
-	id := r.FormValue("id")
+	db := utils.Sqlhandler()
+	task := models.Task{}
+	task.Id, _ = strconv.ParseInt(r.FormValue("id"), 10, 64)
 	deleteData, err := db.Prepare("DELETE FROM t_task WHERE id = ?")
 	if err != nil {
 		log.Fatal(err)
@@ -139,7 +145,7 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 
 	defer deleteData.Close()
 
-	result, err := deleteData.Exec(id)
+	result, err := deleteData.Exec(&task.Id)
 	if err != nil {
 		panic(err.Error())
 	}
