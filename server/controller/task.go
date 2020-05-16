@@ -21,6 +21,20 @@ type Task struct {
 	UpdateAt time.Time
 }
 
+// sample
+func Sample(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	nowTime := time.Now()
+	const format = "2006/01/02 15:04:05"
+	nowTime.Format(format)
+	sample := make(map[string]interface{})
+	sample["lang"] = "Go"
+	sample["id"] = 9999
+	sample["job"] = "professional baseball player"
+	sample["time"] = nowTime.Format(format)
+	json.NewEncoder(w).Encode(sample)
+}
+
 // 構造体に関して勉強（作成）Create まだ
 func Create(w http.ResponseWriter, r *http.Request) {
 
@@ -83,8 +97,15 @@ func Read(w http.ResponseWriter, r *http.Request) {
 // 構造体に関して勉強（作成）Find　まだ
 func Find(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	db := util.Sqlhandler()
 	id := r.FormValue("id")
-	json.NewEncoder(w).Encode(id)
+	var task Task
+	err := db.QueryRow("SELECT * FROM t_task WHERE id = ?", id).Scan(&task.Id, &task.Task, &task.CreateAt, &task.UpdateAt)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	json.NewEncoder(w).Encode(task)
 }
 
 // 構造体に関して勉強（作成）Update　まだ
@@ -93,6 +114,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 	nowTime := time.Now()
 	db := util.Sqlhandler()
 	id := r.FormValue("id")
+	task := r.FormValue("task")
 	defer db.Close()
 	upd, err := db.Prepare("UPDATE t_task SET task = ?, updated_at = ? WHERE id = ? ")
 	if err != nil {
@@ -100,7 +122,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer upd.Close()
-	upd.Exec("yamatonadeshiko", nowTime, id)
+	upd.Exec(task, nowTime, id)
 }
 
 // 構造体に関して勉強（作成）Delete まだ

@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	http.HandleFunc("/sample", controller.Sample)
 	http.HandleFunc("/cretate", controller.Create)
 	http.HandleFunc("/read", controller.Read)
 	http.HandleFunc("/find", controller.Find)

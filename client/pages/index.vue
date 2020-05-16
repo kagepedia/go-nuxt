@@ -7,6 +7,11 @@
         タスク <input v-model="newTask" type="text" />
         <button @click="taskAdd()">追加</button>
       </div>
+      <h2>taskの編集</h2>
+      <div>
+        タスク <input v-model="editTask" type="text" />
+        <button @click="edit(editId)">データを更新</button>
+      </div>
       <h2>task一覧</h2>
       <table class="test">
         <tr>
@@ -43,6 +48,8 @@ export default {
   data() {
     return {
       newTask: '',
+      editTask: '',
+      editId: '',
       datas: []
     }
   },
@@ -58,11 +65,16 @@ export default {
     find(id) {
       const params = new URLSearchParams()
       params.append('id', id)
-      axios.post('/api/find', params).then((res) => console.log(res))
+      axios.post('/api/find', params).then((res) => {
+        this.editId = res.data.Id
+        this.editTask = res.data.Task
+      })
     },
     edit(id) {
       const params = new URLSearchParams()
       params.append('id', id)
+      params.append('task', this.editTask)
+      console.log(id, this.editTask)
       axios.post('/api/update', params).then((res) => console.log(res))
     },
     del(id) {
