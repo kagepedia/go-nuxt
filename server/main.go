@@ -10,6 +10,7 @@ func main() {
 	http.HandleFunc("/sample", controller.Sample)
 	http.HandleFunc("/cretate", controller.Create)
 	http.HandleFunc("/read", controller.Read)
+	http.HandleFunc("/readsample", controller.ReadSample)
 	http.HandleFunc("/find", controller.Find)
 	http.HandleFunc("/update", controller.Update)
 	http.HandleFunc("/delete", controller.Delete)

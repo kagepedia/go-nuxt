@@ -37,7 +37,7 @@ func Sample(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(sample)
 }
 
-// 構造体に関して勉強（作成）Create まだ
+// Create
 func Create(w http.ResponseWriter, r *http.Request) {
 
 	task := models.Task{}
@@ -62,7 +62,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(task)
 }
 
-// 構造体に関して勉強（表示）Read OK
+// Read
 func Read(w http.ResponseWriter, r *http.Request) {
 	// json定義
 	w.Header().Set("Content-Type", "application/json")
@@ -74,9 +74,9 @@ func Read(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	var tasks []Task
+	tasks := []models.Task{}
 	for rows.Next() {
-		var task Task
+		var task models.Task
 		err := rows.Scan(&task.Id, &task.Task, &task.CreateAt, &task.UpdateAt)
 
 		if err != nil {
@@ -97,7 +97,7 @@ func Read(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 }
 
-// 構造体に関して勉強（作成）Find　まだ
+// Find
 func Find(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	db := utils.Sqlhandler()
@@ -112,7 +112,7 @@ func Find(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(task)
 }
 
-// 構造体に関して勉強（作成）Update　まだ
+// Update
 func Update(w http.ResponseWriter, r *http.Request) {
 	//update
 	nowTime := time.Now()
@@ -130,7 +130,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 	upd.Exec(&task.Task, nowTime, &task.Id)
 }
 
-// 構造体に関して勉強（作成）Delete まだ
+// Delete
 func Delete(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
@@ -159,4 +159,39 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	json.NewEncoder(w).Encode(rowsAffect)
+}
+
+// DBカラムを元にデータを加工する
+func ReadSample(w http.ResponseWriter, r *http.Request) {
+	// json定義
+	w.Header().Set("Content-Type", "application/json")
+
+	db := utils.Sqlhandler()
+	rows, err := db.Query("SELECT * FROM t_task")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	tasks := []models.Task{}
+	for rows.Next() {
+		var task models.Task
+		err := rows.Scan(&task.Id, &task.Task, &task.CreateAt, &task.UpdateAt)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		tasks = append(tasks, task)
+
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	json.NewEncoder(w).Encode(tasks)
+
+	defer db.Close()
 }
