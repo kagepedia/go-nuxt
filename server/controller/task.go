@@ -160,38 +160,3 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(rowsAffect)
 }
-
-// DBカラムを元にデータを加工する
-func ReadSample(w http.ResponseWriter, r *http.Request) {
-	// json定義
-	w.Header().Set("Content-Type", "application/json")
-
-	db := utils.Sqlhandler()
-	rows, err := db.Query("SELECT * FROM t_task")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	tasks := []models.Task{}
-	for rows.Next() {
-		var task models.Task
-		err := rows.Scan(&task.Id, &task.Task, &task.CreateAt, &task.UpdateAt)
-
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		tasks = append(tasks, task)
-
-	}
-	err = rows.Err()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	json.NewEncoder(w).Encode(tasks)
-
-	defer db.Close()
-}
