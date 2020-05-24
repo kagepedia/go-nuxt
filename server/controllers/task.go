@@ -16,27 +16,6 @@ import (
 	"github.com/kagepedia/go-api/utils"
 )
 
-type Task struct {
-	Id       int64
-	Task     string
-	CreateAt time.Time
-	UpdateAt time.Time
-}
-
-// sample
-func Sample(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	nowTime := time.Now()
-	const format = "2006/01/02 15:04:05"
-	nowTime.Format(format)
-	sample := make(map[string]interface{})
-	sample["lang"] = "Go"
-	sample["id"] = 9999
-	sample["job"] = "professional baseball player"
-	sample["time"] = nowTime.Format(format)
-	json.NewEncoder(w).Encode(sample)
-}
-
 // Create
 func Create(w http.ResponseWriter, r *http.Request) {
 
