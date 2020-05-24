@@ -9,7 +9,6 @@ import (
 func main() {
 	http.HandleFunc("/cretate", controllers.Create)
 	http.HandleFunc("/read", controllers.Read)
-	http.HandleFunc("/readsample", controllers.ReadSample)
 	http.HandleFunc("/find", controllers.Find)
 	http.HandleFunc("/update", controllers.Update)
 	http.HandleFunc("/delete", controllers.Delete)
