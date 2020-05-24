@@ -3,16 +3,16 @@ package main
 import (
 	"net/http"
 
-	"github.com/kagepedia/go-api/controller"
+	"github.com/kagepedia/go-api/controllers"
 )
 
 func main() {
-	http.HandleFunc("/sample", controller.Sample)
-	http.HandleFunc("/cretate", controller.Create)
-	http.HandleFunc("/read", controller.Read)
-	http.HandleFunc("/readsample", controller.ReadSample)
-	http.HandleFunc("/find", controller.Find)
-	http.HandleFunc("/update", controller.Update)
-	http.HandleFunc("/delete", controller.Delete)
+	http.HandleFunc("/sample", controllers.Sample)
+	http.HandleFunc("/cretate", controllers.Create)
+	http.HandleFunc("/read", controllers.Read)
+	http.HandleFunc("/readsample", controllers.ReadSample)
+	http.HandleFunc("/find", controllers.Find)
+	http.HandleFunc("/update", controllers.Update)
+	http.HandleFunc("/delete", controllers.Delete)
 	http.ListenAndServe(":8888", nil)
 }
