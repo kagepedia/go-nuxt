@@ -43,8 +43,6 @@ func Create(w http.ResponseWriter, r *http.Request) {
 
 // Read
 func Read(w http.ResponseWriter, r *http.Request) {
-	// json定義
-	w.Header().Set("Content-Type", "application/json")
 
 	db := utils.Sqlhandler()
 	rows, err := db.Query("SELECT * FROM t_task")
@@ -71,6 +69,7 @@ func Read(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(tasks)
 
 	defer db.Close()
@@ -78,7 +77,7 @@ func Read(w http.ResponseWriter, r *http.Request) {
 
 // Find
 func Find(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	db := utils.Sqlhandler()
 	id := r.FormValue("id")
 	task := models.Task{}
@@ -88,6 +87,8 @@ func Find(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(task)
 }
 
@@ -112,8 +113,6 @@ func Update(w http.ResponseWriter, r *http.Request) {
 // Delete
 func Delete(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Set("Content-Type", "application/json")
-
 	db := utils.Sqlhandler()
 	task := models.Task{}
 	task.Id, _ = strconv.ParseInt(r.FormValue("id"), 10, 64)
@@ -137,5 +136,6 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 
 	defer db.Close()
 
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(rowsAffect)
 }
