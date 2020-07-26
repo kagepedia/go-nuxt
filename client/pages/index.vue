@@ -6,6 +6,7 @@
       <div>
         タスク
         <input v-model="newTask" type="text" />
+        <input type="file" @change="onChange" />
         <button @click="taskAdd()">追加</button>
       </div>
       <h2>taskの編集</h2>
@@ -56,6 +57,7 @@ export default {
       newTask: '',
       editTask: '',
       editId: '',
+      file: null,
       datas: []
     }
   },
@@ -63,29 +65,54 @@ export default {
     axios.get('/api/read').then((res) => (this.datas = res.data))
   },
   methods: {
+    onChange(event) {
+      this.file = event.target.files[0]
+    },
     taskAdd() {
-      const params = new URLSearchParams()
+      const params = new FormData()
       params.append('task', this.newTask)
-      axios.post('/api/cretate', params).then((this.newTask = ''))
+      params.append('file', this.file)
+      axios
+        .post('/api/cretate', params, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.newTask = ''
+            location.reload()
+          }
+        })
     },
     find(id) {
       const params = new URLSearchParams()
       params.append('id', id)
       axios.post('/api/find', params).then((res) => {
-        this.editId = res.data.Id
-        this.editTask = res.data.Task
+        if (res.status === 200) {
+          this.editId = res.data.Id
+          this.editTask = res.data.Task
+        }
       })
     },
     edit(id) {
       const params = new URLSearchParams()
       params.append('id', id)
       params.append('task', this.editTask)
-      axios.post('/api/update', params).then((res) => console.log(res))
+      axios.post('/api/update', params).then((res) => {
+        if (res.status === 200) {
+          location.reload()
+        }
+      })
     },
     del(id) {
       const params = new URLSearchParams()
       params.append('id', id)
-      axios.post('/api/delete', params).then((res) => console.log(res))
+      axios.post('/api/delete', params).then((res) => {
+        if (res.status === 200) {
+          location.reload()
+        }
+      })
     }
   }
 }

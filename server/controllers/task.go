@@ -8,8 +8,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/kagepedia/go-api/models"
+	"io"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -24,6 +26,8 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	nowTime := time.Now()
 	const format = "2006/01/02 15:04:05"
 	nowTime.Format(format)
+
+	// DBに保存
 	db := utils.Sqlhandler()
 	defer db.Close()
 	ins, err := db.Prepare("INSERT INTO t_task (task,created_at,updated_at) VALUES (?,?,?)")
@@ -37,6 +41,26 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	// ファイル保存
+	/*
+		file, _, file1Err := r.FormFile("file")
+		if file1Err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		defer file.Close()
+
+		f, file2Err := os.Create("/img/IMAGE.png")
+		if file2Err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		defer f.Close()
+		io.Copy(f, file)
+	*/
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(task)
 }
