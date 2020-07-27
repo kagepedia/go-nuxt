@@ -42,24 +42,32 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// upload size
+	err1 := r.ParseMultipartForm(200000)
+	if err1 != nil {
+		fmt.Println("Error Retrieving the File")
+		fmt.Println(err)
+		return
+	}
+
 	// ファイル保存
-	/*
-		file, _, file1Err := r.FormFile("file")
-		if file1Err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		defer file.Close()
+	file, handler, file1Err := r.FormFile("file")
+	if file1Err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer file.Close()
 
-		f, file2Err := os.Create("/img/IMAGE.png")
-		if file2Err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
+	f, file2Err := os.Create(handler.Filename)
+	if file2Err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-		defer f.Close()
-		io.Copy(f, file)
-	*/
+	defer f.Close()
+	io.Copy(f, file)
+
+	defer f.Close()
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(task)
