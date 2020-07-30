@@ -16,7 +16,7 @@
       </tr>
       <tr>
         <td colspan="1">
-          <button @click="registration()">送信</button>
+          <button @click="login()">送信</button>
         </td>
       </tr>
     </table>
@@ -26,7 +26,7 @@
 <style scoped></style>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 
 export default {
   data() {
@@ -36,17 +36,16 @@ export default {
     }
   },
   methods: {
-    registration() {
+    login() {
       const params = new FormData()
       params.append('ID', this.ID)
       params.append('PW', this.PW)
       console.log(this.ID, this.PW)
-      /*
-      axios.post('/api/cretate', params).then((res) => {
+      axios.post('/api/login', params).then((res) => {
         if (res.status === 200) {
+          this.$router.push('/')
         }
       })
-      */
     }
   }
 }
