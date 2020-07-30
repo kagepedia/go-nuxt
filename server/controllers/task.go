@@ -58,7 +58,15 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	f, file2Err := os.Create(handler.Filename)
+	_, errImg := os.Stat("image")
+	if errImg != nil {
+		errImg = os.Mkdir("image", 0755)
+		if errImg != nil {
+			log.Fatal(err)
+		}
+	}
+
+	f, file2Err := os.Create("image/" + handler.Filename)
 	if file2Err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
