@@ -37,6 +37,11 @@
       </v-btn>
       <v-toolbar-title v-text="title" />
       <v-spacer />
+      <nuxt-link to="/registration">登録</nuxt-link>
+      <v-spacer />
+      <nuxt-link to="/login">ログイン</nuxt-link>
+      <v-spacer />
+      <button @click="logout()">ログアウト</button>
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>mdi-menu</v-icon>
       </v-btn>
@@ -50,9 +55,7 @@
       <v-list>
         <v-list-item @click.native="right = !right">
           <v-list-item-action>
-            <v-icon light>
-              mdi-repeat
-            </v-icon>
+            <v-icon light>mdi-repeat</v-icon>
           </v-list-item-action>
           <v-list-item-title>Switch drawer (click me)</v-list-item-title>
         </v-list-item>
@@ -65,6 +68,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data() {
     return {
@@ -87,6 +92,14 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'Vuetify.js'
+    }
+  },
+  methods: {
+    logout() {
+      axios.post('/api/').then((res) => {
+        if (res.status === 200) {
+        }
+      })
     }
   }
 }
