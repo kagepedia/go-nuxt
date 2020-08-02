@@ -43,6 +43,8 @@ export default {
       console.log(this.ID, this.PW)
       axios.post('/api/login', params).then((res) => {
         if (res.status === 200) {
+          this.$store.dispatch('userLogin', true)
+          console.log(res)
           this.$router.push('/')
         }
       })

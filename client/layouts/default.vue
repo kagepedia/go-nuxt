@@ -37,11 +37,13 @@
       </v-btn>
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <nuxt-link to="/registration">登録</nuxt-link>
+      <nuxt-link v-if="!$store.state.loggedIn" to="/registration"
+        >登録</nuxt-link
+      >
       <v-spacer />
-      <nuxt-link to="/login">ログイン</nuxt-link>
+      <nuxt-link v-if="!$store.state.loggedIn" to="/login">ログイン</nuxt-link>
       <v-spacer />
-      <button @click="logout()">ログアウト</button>
+      <button v-if="$store.state.loggedIn" @click="logout()">ログアウト</button>
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>mdi-menu</v-icon>
       </v-btn>
@@ -96,8 +98,11 @@ export default {
   },
   methods: {
     logout() {
-      axios.post('/api/').then((res) => {
+      axios.post('/api/logout').then((res) => {
         if (res.status === 200) {
+          this.$store.dispatch('userLogin', false)
+          console.log(res)
+          this.$router.push('/')
         }
       })
     }
