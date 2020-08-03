@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-type User struct {
+type Registration struct {
 	Pk       int64
 	Id       string
 	Pw       string

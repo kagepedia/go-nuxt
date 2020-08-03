@@ -18,5 +18,10 @@ func main() {
 	http.HandleFunc("/login", controllers.Login)
 	http.HandleFunc("/logout", controllers.Logout)
 
+	// Registration Process
+	http.HandleFunc("/registration/form", controllers.Form)
+	http.HandleFunc("/registration/conf", controllers.Conf)
+	http.HandleFunc("/registration/comp", controllers.Comp)
+
 	http.ListenAndServe(":8888", nil)
 }

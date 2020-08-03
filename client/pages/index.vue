@@ -1,7 +1,6 @@
 <template>
   <v-layout column justify-center align-center>
     <div>
-      <nuxt-link to="/Create">Create</nuxt-link>
       <h2>新しいtaskの追加</h2>
       <div>
         タスク

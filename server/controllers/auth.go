@@ -18,7 +18,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	db := utils.Sqlhandler()
 	ID := r.FormValue("ID")
 	PW := r.FormValue("PW")
-	user := models.User{}
+	user := models.Auth{}
 	// var user User
 	err := db.QueryRow("SELECT pk, ID FROM t_user WHERE ID = ? and PW = ?", ID, PW).Scan(&user.Pk, &user.Id)
 	if err != nil {
@@ -36,7 +36,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	/*
 		db := utils.Sqlhandler()
 		ID := r.FormValue("ID")
-		user := models.User{}
+		user := models.Auth{}
 		// var user User
 		err := db.QueryRow("SELECT * FROM t_user WHERE ID = ? and PW = ?", ID).Scan()
 		if err != nil {
